@@ -15,11 +15,11 @@ T- he given numbers for rows and columns have to be equal to the number of tents
 
 Use the following file format for puzzles:
 
-5 10
-.......... 0
-......T... 2
-..T...T... 0
-.......... 1
-.......... 0
-0 0 1 0 0 0 1 1 0 0
+5 10 <br>
+.......... 0 <br>
+......T... 2 <br>
+..T...T... 0 <br>
+.......... 1 <br>
+.......... 0 <br>
+0 0 1 0 0 0 1 1 0 0 <br>
 The first line provides the dimensions of the puzzle (rows and columns). Then one line per row representing the puzzle, a dot for an empty cell or a T for a tree, after the line, separated by a space, follows the number of tents in the row. After the last line of the puzzle follow the numbers of tents for each column (separated by spaces).
