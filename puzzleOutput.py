@@ -4,11 +4,11 @@ def output_solved_puzzle(grid_rows, grid_columns, trees, tents, tent_counts_per_
         row = ""
         for j in range(grid_columns):
             if (i, j) in trees:
-                row += "T"
+                row += "T "
             elif (i, j) in resultTents:
-                row += "#"
+                row += "# "
             else:
-                row += "."
+                row += ". "
         puzzle_rows.append(row)
 
     # Print the puzzle and counts (unchanged):

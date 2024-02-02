@@ -1,4 +1,3 @@
-
 from z3 import *
 
 def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_counts_per_column, tents, solver):
@@ -8,6 +7,15 @@ def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_cou
 # Rule 2: No tent and tree in same position
     for i, j in trees:
         solver.add(Not(tents[i][j]))
+
+# Every tent must have at least one adjacent tree vertically or horizontally
+    for i in range(grid_rows):
+        for j in range(grid_columns):
+            adjacent_trees = [(i - 1, j) in trees if i > 0 else False,
+                            (i + 1, j) in trees if i < grid_rows - 1 else False,
+                            (i, j - 1) in trees if j > 0 else False,
+                            (i, j + 1) in trees if j < grid_columns - 1 else False]
+            solver.add(Implies(tents[i][j], Or(*adjacent_trees)))
 
 # Rule 3: Each tree must have a unique adjacent tent 
     for i, j in trees:
@@ -106,5 +114,23 @@ def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_cou
                     break  # No need to check further adjacent tents
 
         num_adjacent_tents = Sum(adjacent_tents)
-    # Add implication: If a tree has 2 adjacent tents, at least one of these tents must have 2 adjacent trees
+        # Add implication: If a tree has 2 adjacent tents, at least one of these tents must have 2 adjacent trees
         solver.add(Implies(num_adjacent_tents == 2, has_tent_with_two_trees))
+'''
+    # Rule 8: Enforce at least one tree next to tent
+    for i in range(grid_rows):
+        for j in range(grid_columns):
+            # Check for tent at (i, j):
+            if is_true(tents[i][j]):
+                # Count adjacent trees:
+                num_adjacent_trees = 0
+                for di, dj in allowed_diffs:
+                    tree_i, tree_j = i + di, j + dj
+                    if (0 <= tree_i < grid_rows) and (0 <= tree_j < grid_columns) and (tree_i, tree_j) in trees:
+                        # Ensure only vertical or horizontal adjacency:
+                        if (tree_i == i and abs(tree_j - j) == 1) or (tree_j == j and abs(tree_i - i) == 1):
+                            num_adjacent_trees += 1
+
+                # Add constraint: Each tent must have at least one adjacent tree
+                solver.add(num_adjacent_trees >= 1)  # Enforce the new rule
+                '''
