@@ -1,14 +1,15 @@
 from z3 import *
 
 def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_counts_per_column, tents, solver):
-    # Rule 1: Enforce equal number of trees and tents
+
+    '''Enforce equal number of trees and tents'''
     solver.add(Sum([tents[i][j] for i in range(grid_rows) for j in range(grid_columns)]) == len(trees))
 
-# Rule 2: No tent and tree in same position
+    '''No tent and tree in same position'''
     for i, j in trees:
         solver.add(Not(tents[i][j]))
 
-# Every tent must have at least one adjacent tree vertically or horizontally
+    '''Every tent must have at least one adjacent tree vertically or horizontally'''
     for i in range(grid_rows):
         for j in range(grid_columns):
             adjacent_trees = [(i - 1, j) in trees if i > 0 else False,
@@ -17,7 +18,7 @@ def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_cou
                             (i, j + 1) in trees if j < grid_columns - 1 else False]
             solver.add(Implies(tents[i][j], Or(*adjacent_trees)))
 
-# Rule 3: Each tree must have a unique adjacent tent 
+    '''Each tree must have at least one adjacent tent''' 
     for i, j in trees:
         if grid_rows == 1:  # One row case
         # Check left and right neighbors (but avoid accessing outside the grid)        
@@ -56,7 +57,7 @@ def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_cou
         else:
             solver.add(Or(tents[i - 1][j], tents[i][j - 1], tents[i][j + 1], tents[i + 1][j]))
 
-## Rule 4: Enforce non-adjacency of tents (horizontally, vertically, diagonally)
+    ''' Enforce non-adjacency of tents (horizontally, vertically, diagonally)'''
     for i in range(grid_rows):
         for j in range(grid_columns):
         # Prevent horizontal adjacency (left and right)
@@ -82,11 +83,11 @@ def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_cou
                 solver.add(Not(And(tents[i][j], tents[i + 1][j + 1])))
 
 
-# Rule 5: Enforce tent counts per row
+    ''' Enforce tent counts per row'''
     for i in range(grid_rows):
         solver.add(Sum(tents[i]) == tent_counts_per_row[i])
 
-# Rule 6: Enforce tent counts per column
+    ''' Enforce tent counts per column'''
     for j in range(grid_columns):
         solver.add(Sum([tents[i][j] for i in range(grid_rows)]) == tent_counts_per_column[j])
 
@@ -94,7 +95,7 @@ def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_cou
 # Define allowed differences for vertical and horizontal adjacency between tree and tent
     allowed_diffs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
-# Rule 7: Enforce tent-tree relationships
+    '''Enforce tent-tree relationships'''
     for i, j in trees:
         has_tent_with_two_trees = False
         adjacent_tents = []
@@ -116,21 +117,3 @@ def addConstraints(grid_rows, grid_columns, trees, tent_counts_per_row, tent_cou
         num_adjacent_tents = Sum(adjacent_tents)
         # Add implication: If a tree has 2 adjacent tents, at least one of these tents must have 2 adjacent trees
         solver.add(Implies(num_adjacent_tents == 2, has_tent_with_two_trees))
-'''
-    # Rule 8: Enforce at least one tree next to tent
-    for i in range(grid_rows):
-        for j in range(grid_columns):
-            # Check for tent at (i, j):
-            if is_true(tents[i][j]):
-                # Count adjacent trees:
-                num_adjacent_trees = 0
-                for di, dj in allowed_diffs:
-                    tree_i, tree_j = i + di, j + dj
-                    if (0 <= tree_i < grid_rows) and (0 <= tree_j < grid_columns) and (tree_i, tree_j) in trees:
-                        # Ensure only vertical or horizontal adjacency:
-                        if (tree_i == i and abs(tree_j - j) == 1) or (tree_j == j and abs(tree_i - i) == 1):
-                            num_adjacent_trees += 1
-
-                # Add constraint: Each tent must have at least one adjacent tree
-                solver.add(num_adjacent_trees >= 1)  # Enforce the new rule
-                '''
