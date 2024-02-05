@@ -1,19 +1,17 @@
-Tents (sometimes known as "Tents and Trees") is a popular logic puzzle.  
-It was first published by Léon Balmaekers with the Dutch name "Alle Ballen Verzamelen" in 1989.
+## Z3 Automated Tent Puzzle Solver
 
-Some webpages with Tent puzzles:
+Tents ("Tents and Trees") puzzle is a logic grid-based puzzle invented by Léon Balmaekers [1]. Some squares within the grid contain trees, as shown in Figure 1, and the objective is to strategically place tents in the remaining squares under the following constraints:
 
-https://www.puzzle-tents.com/
-https://www.brainbashers.com/tents.asp
-https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/tents.html
+- Each tree is connected to a tree horizontally or vertically, not diagonally. While a tree can be adjacent to two tents and a tent can be adjacent to two trees, the connections are 1:1 - a tent connects to only one tree, and vice versa.
 
-Here is a summary of the rules
+- There are exactly as many tents as trees on the grid.
 
-- Place tents on the grid so each tree has a unique horizontally or vertically adjacent tent. This also means that no tent can "serve" more than one tree.
-- Tents should not be adjacent to each other (neither horizontally, nor vertically, and also not diagonally).
-T- he given numbers for rows and columns have to be equal to the number of tents placed in the respective row or column.
+- No two tents are adjacent horizontally, vertically, or diagonally.
 
-Use the following file format for puzzles:
+- Numbers positioned around the grid's perimeter indicate the required number of tents in each row and column, offering clues to their placement.
+
+
+The provided solver uses the following file format for puzzles:
 
 5 10 <br>
 .......... 0 <br>
@@ -21,5 +19,15 @@ Use the following file format for puzzles:
 ..T...T... 0 <br>
 .......... 1 <br>
 .......... 0 <br>
-0 0 1 0 0 0 1 1 0 0 <br>
+0 0 1 0 0 0 1 1 0 0 
+
 The first line provides the dimensions of the puzzle (rows and columns). Then one line per row representing the puzzle, a dot for an empty cell or a T for a tree, after the line, separated by a space, follows the number of tents in the row. After the last line of the puzzle follow the numbers of tents for each column (separated by spaces).
+
+
+
+## Requirmnets
+Run  `pip install -r requirements.txt`
+
+Edit `puzzle.txt` to provide input.
+
+Run `python main.py` for puzzle solution.
