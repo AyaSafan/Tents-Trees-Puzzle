@@ -26,8 +26,10 @@ The first line provides the dimensions of the puzzle (rows and columns). Then on
 
 
 ## Requirmnets
-Run  `pip install -r requirements.txt`
+1. To Install Python 3 on Ubuntu 20.04 or 22.04, check: https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
 
-Edit `puzzle.txt` to provide input.
+2. Run  `pip install -r requirements.txt`
 
-Run `python main.py` for puzzle solution.
+3. Edit `puzzle.txt` to provide input.
+
+4. Run `python main.py` for puzzle solution.
